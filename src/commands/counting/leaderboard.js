@@ -8,7 +8,6 @@ module.exports = {
     .setDMPermission(false)
     .setDescription('View the top current high score!'),
   async execute(interaction) {
-    // find the top 10 users by wallet value
     const guildData = await guildDatas.find().sort({ lastScore: -1 }).limit(10);
     const guildScore = await guildDatas.findOne({ guildId: interaction.guild.id });
     
