@@ -32,7 +32,7 @@ Before starting with the installation, you need to have the following:
 
 ## 🚀 Installation from source
 
-1. Clone theCountingBot repository:
+1. Clone the CountingBot repository:
 
 ```bash
 git clone https://github.com/jasonmidul/CountingBot.git
