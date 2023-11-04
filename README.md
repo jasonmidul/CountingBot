@@ -38,7 +38,7 @@ Before starting with the installation, you need to have the following:
 git clone https://github.com/jasonmidul/CountingBot.git
 ```
 
-2. change the directory to Lavamusic
+2. change the directory to CountingBot
 
 ```bash
 cd CountingBot
