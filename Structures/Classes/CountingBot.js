@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 class CountingBot extends Client {
   
-  color = Colors.configuration.color;
+  color = configuration.color;
   config = configuration;
   commands = new Collection();
   events = new Collection();
