@@ -7,23 +7,20 @@ const { EmbedBuilder } = require("discord.js");
  */
 
 async function VoteLog(client, id, name) {
-  
-  const channel = await client.channels.cache.get(client.config.voteLog);
-  
+  const channel = client.channels.cache.get(client.config.voteLog);
   const image = `https://top.gg/api/widget/${client.config.clientId}.svg`;
-
-  await channel.send({
+  const embed = {
     content: `<@${id}>`,
-    embeds: [
-      new EmbedBuilder()
-        .setTitle(`${name} Just Voted!`)
-        .setImage(image)
-        .setColor(client.color)
-        .setTimestamp()
-        .setDescription(`Thank's for voting **[Counting Bot](https://top.gg/bot/${client.config.clientId})**.`)
-        .setFooter({ text: `Counting Bot - 2023`, iconURL: client.user.displayAvatarURL({ dynamic: true })})
-    ]
-  })
+    embeds: [{
+      title: `${name} Just Voted!`,
+      image: { url: image },
+      color: client.color,
+      timestamp: new Date(),
+      description: `Thank's for voting **[Counting Bot](https://top.gg/bot/${client.config.clientId})**.`,
+      footer: { text: 'Counting Bot - 2023', iconURL: client.user.displayAvatarURL({ dynamic: true })}
+    }]
+  };
+  await channel.send(embed);
 }
 
 module.exports = { VoteLog };
