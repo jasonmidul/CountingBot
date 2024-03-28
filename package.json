@@ -1,6 +1,6 @@
 {
   "name": "CountingBot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Advanced discord CountingBot with top.gg vote reward system made with discord.js v14(slash command).",
   "main": "Stru/index.js",
   "scripts": {
