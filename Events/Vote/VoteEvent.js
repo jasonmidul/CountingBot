@@ -16,81 +16,38 @@ module.exports = {
     */
   
   
-  async execute(client) {
+async execute(client) {
+  app.post('/vote', webhook.listener(async (vote) => {
+    const userData = await userDatas.findOneAndUpdate(
+      { id: vote.user },
+      { $inc: { saves: 1, 'vote.count': 1, 'vote.time': new Date() } },
+      { upsert: true, new: true }
+    );
 
-    app.post('/vote', webhook.listener(async (vote) => {
+    let embed = new EmbedBuilder()
+      .setTitle("🎁 You just voted me!")
+      .setDescription(userData.saveSlot > userData.saves
+        ? `> You claimed \`1\` save as vote reward! \n> You can vote [here](https://top.gg/bot/${client.config.clientId}) in every \`12h\`. \n> Now you have **${userData.saves}/${userData.saveSlot}** saves.\n> Use \`/user\` for more information.`
+        : `**You vote slot is full. You need to upgrade your profile for increase your saves slote. \n\n**> You claimed noting as vote reward! \n> You can vote [here](https://top.gg/bot/${client.config.clientId}) in every \`12h\`. \n> Now you have **${userData.saves}/${userData.saveSlot}** saves.\n> Use \`/profile\` for more information.`)
+      .setColor(client.color)
+      .setFooter({ text: `Thanks for voting me! ❤️` })
+      .setTimestamp();
 
-      const userData = await userDatas.findOne({ id: vote.user });
-      
-      let embed = new EmbedBuilder()
+    const voteUser = await client.users.fetch(vote.user);
 
-      if (userData) {
-        if (userData.saveSlot > userData.saves) {
-          userData.saves += 1;
-          userData.vote.count += 1;
-          userData.save();
-          
-          embed.setTitle("🎁 You just voted me!")
-          embed.setDescription(`> You claimed \`1\` save as vote reward! \n> You can vote [here](https://top.gg/bot/${client.config.clientId}) in every \`12h\`. \n> Now you have **${userData.saves}/${userData.saveSlot}** saves.\n> Use \`/user\` for more information.`)
-          embed.setColor(client.color)
-          embed.setFooter({ text: `Thanks for voting me! ❤️` })
-            .setTimestamp()
-        } else {
-          userData.vote.count += 1;
-          userData.vote.time = new Date();
-          userData.save();
-          
-          embed.setTitle("🎁 You just voted me!")
-          embed.setDescription(`**You vote slot is full. You need to upgrade your profile for increase your saves slote. \n\n**> You claimed noting as vote reward! \n> You can vote [here](https://top.gg/bot/${client.config.clientId}) in every \`12h\`. \n> Now you have **${userData.saves}/${userData.saveSlot}** saves.\n> Use \`/profile\` for more information.`)
-            .setColor(client.color)
-            .setFooter({ text: `Thanks for voting me! ❤️` })
-            .setTimestamp()
-        }
-        
-      } else {
-        userDatas.create({
-          id: vote.user,
-          saves: 1,
-          vote: {
-            count: 1,
-            time: new Date()
-          }
-        })
-        
-        embed.setTitle("🎁 You just voted me!")
-        embed.setDescription(`> You claimed \`1\` save as vote reward! \n> You can vote [here](https://top.gg/bot/${client.config.clientId}) in every \`12h\`. \n> Now you have **${userData.saves}/${userData.saveSlot}** saves.\n> Use \`/profile\` for more information.`)
-        embed.setColor(client.color)
-        embed.setFooter({ text: `Thanks for voting me! ❤️` })
-        embed.setTimestamp()
+    if (voteUser) {
+      VoteLog(client, `${vote.user}`, `${voteUser.username}`);
+      try {
+        await voteUser.send({ embeds: [embed] });
+        console.log(`[vote] Dm sent to -` + vote.user);
+      } catch (err) {
+        console.log(`[vote] Cant dm - ` + vote.user + err);
       }
-      
-      const voteUser = await client.users.fetch(vote.user);
-      
-      if (voteUser) {
-        
-        VoteLog(client, `${vote.user}`, `${voteUser.username}`);
-        
-        try {
-          
-          await voteUser.send({ embeds: [embed] });
-        
-          console.log(`[vote] Dm sent to -` + vote.user)
-        
-        } catch (err) {
-        
-          console.log(`[vote] Cant dm - ` + vote.user + err);
-        }
-        
-      } else {
-        
-        VoteLog(client, `${vote.user}`, `${voteUser.username}`);
-        
-      }
-      
-      
-    }));
+    } else {
+      VoteLog(client, `${vote.user}`, `${voteUser.username}`);
+    }
+  }));
 
-    app.listen(5012); // Port
-
-  }
+  app.listen(5012); // Port
+}
 }

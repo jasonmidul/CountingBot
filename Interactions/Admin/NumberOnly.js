@@ -11,18 +11,11 @@ module.exports = {
   async execute(interaction) {
 
     const option = interaction.options.getString("enable");
-
-    const guildData = await guildDatas.findOne({ id: interaction.guild.id });
-
-    const countOnlyEmbed = new EmbedBuilder()
-      .setTitle('✅ Counter Only Updated')
-      .setDescription(`**Successfully counter only setting has been updated to -** \`${option}\``)
-      .setColor('#2f3136')
-      .setFooter({ text: 'Counter Bot - 2023' })
-      .setTimestamp()
-
-    if (!guildData) return await interaction.reply({ content: `❌ Counting channel is not available in this guild. `, ephemeral: true })
-    else {
+  let updateMessage = `❌ Counting channel is not available in this guild.`;
+  const guildData = await guildDatas.findOneAndUpdate({ id: interaction.guild.id }, { numOnly: option }, { new: true, upsert: true });
+  if (guildData) {
+    updateMessage = `✅ Counter Only Updated\n**Successfully counter only setting has been updated to -** \`${option}\``;
+  }
 
       guildData.numOnly = option;
       guildData.save();
@@ -30,4 +23,3 @@ module.exports = {
       await interaction.reply({ embeds: [embed], ephemeral: true })
     }
   }
-}
