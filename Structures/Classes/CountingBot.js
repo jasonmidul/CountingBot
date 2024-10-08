@@ -9,22 +9,25 @@ class CountingBot extends Client {
   commands = new Collection();
   events = new Collection();
 
-  start() {
-    const db = process.env.MONGO;
-    const token = process.env.TOKEN;
+async start() {
+  const db = process.env.MONGO;
+  const token = process.env.TOKEN;
 
-    this.login(token)
-      .then(() => {
-        if (!db) return;
-        mongoose.set("strictQuery", false);
-        mongoose.connect(db)
-          .then(data => {
-            console.log(`Connected to: ${data.connection.name}`)
-          })
-          .catch(err => console.log(err))
-      })
-      .catch(err => console.log(err))
+  try {
+    if (!db) return;
+    mongoose.set("strictQuery", false);
+    const data = await mongoose.connect(db);
+    console.log(`Connected to: ${data.connection.name}`);
+  } catch (err) {
+    console.log(err);
   }
+
+  try {
+    await this.login(token);
+  } catch (err) {
+    console.log(err);
+  }
+}
 }
 
 module.exports = { CountingBot };

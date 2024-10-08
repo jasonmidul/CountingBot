@@ -14,44 +14,39 @@ module.exports = {
    *@param {CountingBot} client
    */
   
-  async execute(interaction, client) {
+async execute(interaction, client) {
 
-    const channel = interaction.options.getChannel('channel') || client.channels.cache.get(interaction.channel.id);
-    
-    const guildData = await guildDatas.findOne({ id: interaction.guild.id });
-    
-    const embed = new EmbedBuilder()
-      .setColor('#2f3136')
-    
-    if (guildData && guildData.channelId == channel.id) {
-      
-      embed.setDescription(`❌ The counting channel has already setuped in <#${channel.id}>.`)
-      return interaction.reply({ embeds: [embed] })
-    }
-    
-    if (guildData && guildData.channelId == '0' ) {
-      guildData.channelId = channel.id;
-      guildData.name = interaction.guild.name;
-      guildData.save();
-      embed.setDescription(`✅ The counting channel has been setuped in <#${channel.id}>.`)
-
-    } else if (guildData && guildData.channelId !== '0') {
-      guildData.channelId = channel.id;
-      guildData.name = interaction.guild.name;
-      guildData.save();
-      embed.setDescription(`✅ The counting channel has been moved to <#${channel.id}>.`)
-    } else {
-      guildDatas.create({
+  const channel = interaction.options.getChannel('channel') || client.channels.cache.get(interaction.channel.id);
+  
+  let guildData = await guildDatas.findOneAndUpdate(
+    { id: interaction.guild.id },
+    {
+      $setOnInsert: {
         id: interaction.guild.id,
         name: interaction.guild.name,
+      },
+      $set: {
         channelId: channel.id,
-      })
-      embed.setDescription(`✅ The counting channel has been setuped in <#${channel.id}>.`)
+      },
+      $setOnInsert: {
+        channelId: channel.id,
+      },
+    },
+    { upsert: true, new: true }
+  );
+  
+  const embed = new EmbedBuilder()
+    .setColor('#2f3136');
 
-    }
-    
-    await interaction.reply({ embeds: [embed] })
-    await channel.send(`✨ **This channel has been setuped as a counting channel!**`);
-   
+  if (guildData.channelId === channel.id) {
+    embed.setDescription(`❌ The counting channel has already been set up in <#${channel.id}>.`);
+  } else if (guildData.channelId === '0') {
+    embed.setDescription(`✅ The counting channel has been set up in <#${channel.id}>.`);
+  } else {
+    embed.setDescription(`✅ The counting channel has been moved to <#${channel.id}>.`);
   }
+
+  await interaction.reply({ embeds: [embed] });
+  await channel.send(`✨ **This channel has been set up as a counting channel!**`);
+}
 }
