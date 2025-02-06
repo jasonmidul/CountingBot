@@ -1,0 +1,28 @@
+{
+    "event": {
+        "autocomplete": { 
+            "fail": "> Oops! Something went wrong while trying to run this command. Please try again." 
+        },
+        "button": {
+            "fail": "> Oops! We encountered an error while processing this button. Please try again."
+        },
+        "command": {
+            "fail": "> Oops! There was an error executing this command. Please try again later.",
+            "devOnly": "> Sorry! This command is reserved for the developer of {{client}}. Please contact them for assistance.",
+            "underDev": "> Heads up! This bot is currently under development. Please check back later."
+        },
+        "counting": {
+            "startCount": "<@{{user}}> You need to start counting from **1**.",
+            "B2BCount": "**Oh no, <@{{user}}>! You slipped up at {{breakAt}}! \n**You counted **back-to-back**! Don’t worry—let’s restart and keep going strong!",
+            "wrongNum": "**Oh no, <@{{user}}>! You slipped up at {{breakAt}}!** \nLooks like that was the **wrong number**. Don’t worry—let’s restart and keep going strong!",
+            "guildSaveUseB2B":"**Hello <@{{user}}>!** You’ve used **1 out of {{totalSave}} server saves**, there’s {{leftSave}} left. You counted **back-to-back**! The next number is **{{nextNum}}**!",
+            "userSaveUseB2B": "**Hello <@{{user}}>!** You’ve used **1 out of {{totalSave}} your saves**, you have {{leftSave}} left. You counted **back-to-back**! The next number is **{{nextNum}}**!",
+            "guildSaveUseW":"**Hello <@{{user}}>!** You’ve used **1 out of {{totalSave}} server saves**, there’s {{leftSave}} left. You counted **back-to-back**! The next number is **{{nextNum}}**!",
+            "userSaveUseW": "**Hello <@{{user}}>!** You’ve used **1 out of {{totalSave}} your saves**, you have {{leftSave}} left. You counted **back-to-back**! The next number is **{{nextNum}}**!",
+            "numOnlyDisable": "Number Only setting has beed disabled because I dont have `ManageMessages` permission in this channel.",
+            "embed": {
+                "des": "Vote **[here]({{link}})** to earn save points, so you can use them next time! For more details, check out /rules."
+            }
+        }
+    }
+}

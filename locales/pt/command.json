@@ -1,0 +1,11 @@
+{
+    "language": {
+        "success": "> Olá <@{{user}}>, atualizei com sucesso as minhas definições de idioma para {{data}}!"
+    },
+    "ping": {
+        "reply": "> Ping! Aguarde um momento enquanto verifico...",
+        "embed": {
+            "description": "**Aqui está o meu tempo de resposta atual:** `{{ping}}ms`\n\n> Velocidade de ligação do Discord: `{{apiPing}}ms`\n> Tempo de atividade do bot: <t:{{uptime}}:R>"
+        }
+    }
+}
